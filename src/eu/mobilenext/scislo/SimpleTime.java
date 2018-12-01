@@ -14,7 +14,7 @@ public class SimpleTime {
 
 
     public String toString() {
-        return this.hours + ":" + this.minutes + ":" + this.seconds;
+        return String.format("%02d:%02d:%02d", this.hours, this.minutes, this.seconds);
     }
 
     public boolean hoursGreater(SimpleTime simpleTime) {

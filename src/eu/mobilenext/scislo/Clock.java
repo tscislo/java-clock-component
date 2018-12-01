@@ -18,14 +18,20 @@ public class Clock extends JFrame {
 
     public Clock() {
 
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
         ClockListener simpleListener = new SimpleClockListener();
-        ClockListener digitalListener = new DigitalClockListener(this);
+        ClockListener textListener = new TextClockListener(panel);
+        ClockListener digitalListener = new DigitalClockListener(panel);
 
         ClockComponent clockComponent = new ClockComponent();
 
         clockComponent.addClockListener(simpleListener);
+        clockComponent.addClockListener(textListener);
         clockComponent.addClockListener(digitalListener);
 
+        add(panel);
         setLayout(new FlowLayout());
         pack();
         setVisible(true);
