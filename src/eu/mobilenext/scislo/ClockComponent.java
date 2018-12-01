@@ -2,10 +2,21 @@ package eu.mobilenext.scislo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ClockComponent extends JPanel implements Runnable {
 
+    private SimpleTime pastSimpleTime;
+
+    private SimpleTime getCurrentSimpleTime() {
+        Date currentDate = new Date();
+        return new SimpleTime(currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+    }
+
+    private ClockEvent createClockEvent(ClockEvent.ClockEventType type) {
+        return new ClockEvent(this, type, getCurrentSimpleTime());
+    }
 
     public ClockComponent() {
         Thread t = new Thread(this);
@@ -20,23 +31,34 @@ public class ClockComponent extends JPanel implements Runnable {
         listenerList.remove(ClockListener.class, listener);
     }
 
-    private ClockEvent createClockEvent(ClockEvent.ClockEventType type) {
-        Date currentDate = new Date();
-        return new ClockEvent(this, type, new SimpleTime(currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds()));
-    }
-
 
     @Override
     public void run() {
         EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
         while (true) {
+            pastSimpleTime = getCurrentSimpleTime();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
+            SimpleTime currentSimpleTime = getCurrentSimpleTime();
+            ArrayList<ClockEvent> clockEvents = new ArrayList<ClockEvent>();
+            if (currentSimpleTime.secondsGreater(pastSimpleTime)) {
+                clockEvents.add(this.createClockEvent(ClockEvent.ClockEventType.SECOND));
+            }
+            if (currentSimpleTime.minutesGreater(pastSimpleTime)) {
+                clockEvents.add(this.createClockEvent(ClockEvent.ClockEventType.SECOND));
+                clockEvents.add(this.createClockEvent(ClockEvent.ClockEventType.MINUTE));
+            }
+            if (currentSimpleTime.hoursGreater(pastSimpleTime)) {
+                clockEvents.add(this.createClockEvent(ClockEvent.ClockEventType.SECOND));
+                clockEvents.add(this.createClockEvent(ClockEvent.ClockEventType.MINUTE));
+                clockEvents.add(this.createClockEvent(ClockEvent.ClockEventType.HOUR));
+            }
 
-            ClockEvent ge1 = this.createClockEvent(ClockEvent.ClockEventType.SECOND);
-            queue.postEvent(ge1);
+            for (ClockEvent clockEvent : clockEvents) {
+                queue.postEvent(clockEvent);
+            }
         }
 
     }
@@ -50,6 +72,12 @@ public class ClockComponent extends JPanel implements Runnable {
                 switch (ge.getEventType()) {
                     case SECOND:
                         listeners[i].onSecondsChange(ge);
+                        break;
+                    case MINUTE:
+                        listeners[i].onMinutesChange(ge);
+                        break;
+                    case HOUR:
+                        listeners[i].onHoursChange(ge);
                         break;
                 }
             }

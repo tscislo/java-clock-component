@@ -1,8 +1,9 @@
 package eu.mobilenext.scislo;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class Clock {
+public class Clock extends JFrame {
 
     public static void main(String[] args) {
 
@@ -17,12 +18,17 @@ public class Clock {
 
     public Clock() {
 
-        ClockListener listener = new SimpleClockListener();
+        ClockListener simpleListener = new SimpleClockListener();
+        ClockListener digitalListener = new DigitalClockListener(this);
 
-        ClockComponent clock = new ClockComponent();
+        ClockComponent clockComponent = new ClockComponent();
 
-        clock.addClockListener(listener);
+        clockComponent.addClockListener(simpleListener);
+        clockComponent.addClockListener(digitalListener);
 
-
+        setLayout(new FlowLayout());
+        pack();
+        setVisible(true);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 }

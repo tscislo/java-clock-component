@@ -16,4 +16,17 @@ public class SimpleTime {
     public String toString() {
         return this.hours + ":" + this.minutes + ":" + this.seconds;
     }
+
+    public boolean hoursGreater(SimpleTime simpleTime) {
+        return simpleTime.hours < this.hours;
+    }
+
+    public boolean minutesGreater(SimpleTime simpleTime) {
+        return simpleTime.minutes < this.minutes;
+    }
+
+    public boolean secondsGreater(SimpleTime simpleTime) {
+        return simpleTime.seconds < this.seconds;
+    }
+
 }
