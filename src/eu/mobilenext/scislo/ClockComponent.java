@@ -9,7 +9,7 @@ public class ClockComponent extends JPanel implements Runnable {
 
     private SimpleTime pastSimpleTime;
 
-    private SimpleTime getCurrentSimpleTime() {
+    public static SimpleTime getCurrentSimpleTime() {
         Date currentDate = new Date();
         return new SimpleTime(currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
     }
