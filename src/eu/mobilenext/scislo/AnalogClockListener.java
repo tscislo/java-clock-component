@@ -20,10 +20,12 @@ class AnalogClockListener extends JPanel implements ClockListener {
     private static final double RADIANS_PER_DEGREE = Math.PI / 180.0;
     private int clockSize;
     private Color clockColor;
+    private JPanel panel;
 
 
     public AnalogClockListener(int size, Color color, int frameSize, JPanel panel) {
         super();
+        this.panel = panel;
         clockSize = size;
         clockColor = color;
         int radius = size / 2;
@@ -42,7 +44,14 @@ class AnalogClockListener extends JPanel implements ClockListener {
         getPolygon(angleSeconds, rSeconds, xSeconds, ySeconds);
         getPolygon(angleMinutes, rMinutes, xMinutes, yMinutes);
         getPolygon(angleHours, rHours, xHours, yHours);
+    }
+
+    public void add() {
         panel.add(this);
+    }
+
+    public void remove() {
+        this.panel.remove(this);
     }
 
     void setTime(SimpleTime time) { // set to current time
